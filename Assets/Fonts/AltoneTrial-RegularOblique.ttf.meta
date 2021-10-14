@@ -1,0 +1,22 @@
+fileFormatVersion: 2
+guid: d0aa61d1bbc1faf40a37045578c0e9c7
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontNames:
+  - Altone Trial
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: b077c6a2355b7b3409e5e62250522aaa, type: 3}
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  useLegacyBoundsCalculation: 0
+  shouldRoundAdvanceValue: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

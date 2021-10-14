@@ -5,11 +5,12 @@ using UnityEngine.Networking;
 using SimpleJSON;
 using UnityEngine.UI;
 using TMPro;
+using System;
 
 public class GetSong : MonoBehaviour
 {
-    public RawImage albumCover, Background;
-    public TMP_Text songNameTEXT;
+    public RawImage albumCover, artistPhoto, Background;
+    public TMP_Text songNameTEXT, searchSongName, artistNameTEXT;
 
 
     private readonly string baseSongURL = "http://api.genius.com/search?q=";
@@ -29,7 +30,10 @@ public class GetSong : MonoBehaviour
 
     public void OnButtonGetMusicInfo()
     {
-        string song = "meu%20lugar";
+        //string song = "meu%20lugar";
+        string song = searchSongName.text;
+        Uri.EscapeDataString(song);
+        //Uri.EscapeUriString(song);
         StartCoroutine(findSong(song));
     }
 
@@ -60,19 +64,24 @@ public class GetSong : MonoBehaviour
         string[] songsFounded = new string[homonimunSongs.Count];
 
 
-        string songName = homonimunSongs[0]["result"]["full_title"]; //Completar até o objeto desejado
+        string songName = homonimunSongs[0]["result"]["title"]; //Completar até o objeto desejado
         songNameTEXT.text = songName;
+
+        string artistName = homonimunSongs[0]["result"]["primary_artist"]["name"]; //Completar até o objeto desejado
+        artistNameTEXT.text = artistName;
 
 
         string songCoverURL = homonimunSongs[0]["result"]["song_art_image_url"];
 
         Debug.Log("nome:" + songName);
         Debug.Log("status:" + status);
+        Debug.Log("url:" + songCoverURL);
         //Debug.Log(songsFounded[0]);
 
         //GetAlbumCover
 
         UnityWebRequest AlbumCoverRequest = UnityWebRequestTexture.GetTexture(songCoverURL);
+
         yield return AlbumCoverRequest.SendWebRequest();
 
         if (AlbumCoverRequest.isNetworkError || AlbumCoverRequest.isHttpError)
@@ -81,8 +90,28 @@ public class GetSong : MonoBehaviour
             yield break;
         }
 
+        string ArtistPicURL = homonimunSongs[0]["result"]["primary_artist"]["image_url"];
+        Debug.Log("url:" + ArtistPicURL);
+
+        //GetSingerPic
+
+        UnityWebRequest ArtistPicRequest = UnityWebRequestTexture.GetTexture(ArtistPicURL);
+
+        yield return ArtistPicRequest.SendWebRequest();
+
+        if (ArtistPicRequest.isNetworkError || ArtistPicRequest.isHttpError)
+        {
+            //Debug.LogError(AlbumCoverRequest.error);
+            yield break;
+        }
         //UI
+
+        /*     <----------------------------------------->    */
+
         albumCover.texture = DownloadHandlerTexture.GetContent(AlbumCoverRequest);
         albumCover.texture.filterMode = FilterMode.Point;
+
+        artistPhoto.texture = DownloadHandlerTexture.GetContent(ArtistPicRequest);
+        artistPhoto.texture.filterMode = FilterMode.Point;
     }
 }
